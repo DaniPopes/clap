@@ -812,7 +812,13 @@ impl Command {
         I: IntoIterator<Item = T>,
         T: Into<OsString> + Clone,
     {
-        let mut raw_args = clap_lex::RawArgs::new(itr);
+        self.try_get_matches_from_raw_mut(clap_lex::RawArgs::new(itr))
+    }
+
+    fn try_get_matches_from_raw_mut(
+        &mut self,
+        mut raw_args: clap_lex::RawArgs,
+    ) -> ClapResult<ArgMatches> {
         let mut cursor = raw_args.cursor();
 
         if self.settings.is_set(AppSettings::Multicall) {
